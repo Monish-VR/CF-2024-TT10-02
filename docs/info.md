@@ -9,12 +9,14 @@ You can also include images in this folder and reference them in the markdown. E
 
 ## How it works
 
-Explain how your project works
+The synchronous FIFO is a first in first out memory. When the data is entered and written it gets stored in the memory. And when read out, it will be removed from the memory.
+
+It's based on debouncing mechanism.
 
 ## How to test
 
-Explain how to use your project
+TBA
 
 ## External hardware
 
-List external hardware used in your project (e.g. PMOD, LED display, etc), if any
+NIL
