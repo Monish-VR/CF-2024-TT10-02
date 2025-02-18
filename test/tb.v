@@ -61,7 +61,7 @@ module tb();
     // Monitor output
     initial begin
        $dumpfile("syncFifo.vcd");
-        $dumpvars;
+       $dumpvars(0, tb);    
     end
 
 endmodule
