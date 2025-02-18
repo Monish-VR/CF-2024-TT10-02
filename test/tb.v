@@ -13,6 +13,12 @@ module tb();
     
     // Instantiate the FIFO module
     tt_um_monishvr_fifo uut (
+
+        `ifdef GL_TEST
+      .VPWR(1'b1),
+      .VGND(1'b0),
+`endif
+
         .ui_in(ui_in),
         .uo_out(uo_out),
         .uio_in(uio_in),
@@ -22,6 +28,8 @@ module tb();
         .clk(clk),
         .rst_n(rst_n)
     );
+
+    
     
     // Clock generation
     always #5 clk = ~clk;
