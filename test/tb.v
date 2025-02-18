@@ -23,17 +23,17 @@ module tb ();
   wire [7:0] uio_out;
   wire [7:0] uio_oe;
 `ifdef GL_TEST
-  wire VPWR = 1'b1;
-  wire VGND = 1'b0;
+  // wire VPWR = 1'b1;
+  // wire VGND = 1'b0;
 `endif
 
   // Replace tt_um_example with your module name:
-  tt_um_monishvr_fifo (
+  tt_um_monishvr_fifo user_project(
 
       // Include power ports for the Gate Level test:
 `ifdef GL_TEST
-      .VPWR(VPWR),
-      .VGND(VGND),
+      .VPWR(1'b1),
+      .VGND(1'b0),
 `endif
 
       .ui_in  (ui_in),    // Dedicated inputs
