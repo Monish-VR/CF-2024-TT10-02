@@ -12,7 +12,7 @@ module tb();
     reg ena;
     
     // Instantiate the FIFO module
-    tt_um_monishvr_fifo uut (
+    tt_um_monishvr_fifo dut (
 
         `ifdef GL_TEST
       .VPWR(1'b1),
@@ -21,10 +21,10 @@ module tb();
 
         .ui_in(ui_in),
         .uo_out(uo_out),
-        .uio_in(uio_in),
-        .uio_out(uio_out),
-        .uio_oe(uio_oe),
-        .ena(ena),
+        .uio_in(8'b0),
+        .uio_out(),
+        .uio_oe(),
+        .ena(1'b0),
         .clk(clk),
         .rst_n(rst_n)
     );
@@ -38,7 +38,6 @@ module tb();
         // Initialize signals
         clk = 0;
         rst_n = 0;
-        ena = 1;
         ui_in = 0;
         uio_in = 0;
         
