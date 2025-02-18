@@ -41,7 +41,7 @@ module tb ();
       .uio_in (8'b0),   // IOs: Input path
       .uio_out(),  // IOs: Output path
       .uio_oe (),   // IOs: Enable path (active high: 0=input, 1=output)
-      .ena    (1'b1),      // enable - goes high when design is selected
+     .ena    (ena),      // enable - goes high when design is selected
       .clk    (clk),      // clock
       .rst_n  (rst_n)     // not reset
   );
