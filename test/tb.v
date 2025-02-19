@@ -1,91 +1,49 @@
+`default_nettype none
 `timescale 1ns / 1ps
 
-module tb();
+/* This testbench just instantiates the module and makes some convenient wires
+   that can be driven / tested by the cocotb test.py.
+*/
+module tb ();
 
-    parameter WIDTH = 4, DEPTH = 3;
+  // Dump the signals to a VCD file. You can view it with gtkwave or surfer.
+  initial begin
+    $dumpfile("tb.vcd");
+    $dumpvars(0, tb);
+    #1;
+  end
 
-    // Testbench Signals
-    reg clk;
-    reg rst_n;
-    reg wr_rq, rd_rq;
-    wire full, empty;
-    reg [WIDTH-1:0] wdata;
-    wire [WIDTH-1:0] rdata;
+  // Wire up the inputs and outputs:
+  reg clk;
+  reg rst_n;
+  reg ena;
+  reg [7:0] ui_in;
+  reg [7:0] uio_in;
+  wire [7:0] uo_out;
+  wire [7:0] uio_out;
+  wire [7:0] uio_oe;
+`ifdef GL_TEST
+  wire VPWR = 1'b1;
+  wire VGND = 1'b0;
+`endif
 
-    // Internal FIFO variables for verification
-    reg [WIDTH-1:0] fifo [0:DEPTH-1]; 
-    reg [$clog2(DEPTH)-1:0] wptr = 0;
-    reg [$clog2(DEPTH)-1:0] rptr = 0;
+  // Replace tt_um_example with your module name:
+  tt_um_monishvr_fifo user_project (
 
-    // Clock divider signals
-    wire w_clk;
-    wire r_clk;
+      // Include power ports for the Gate Level test:
+`ifdef GL_TEST
+      .VPWR(VPWR),
+      .VGND(VGND),
+`endif
 
-    // Instantiate the FIFO module with correct port mapping
-    tt_um_monishvr_fifo fifo_inst (
-        .clk(clk),
-        .rst_n(rst_n),
-        .ui_in({4'b0000, wdata}),  // Assign write data to upper bits of ui_in
-        .uo_out({full, empty, rdata}),  // Assign full, empty, and read data to output
-        .uio_in(8'b0),  
-        .uio_out(),
-        .uio_oe(),
-        .ena(1'b1)  // Always enabled
-    );
-
-    
-
-    
-
-    // Generate a clock (10 ns period = 100 MHz)
-    initial begin
-        clk = 0;
-        forever #5 clk = ~clk;
-    end
-
-    // Test sequence
-    initial begin
-        rst_n = 1;
-        wr_rq = 0;
-        rd_rq = 0;
-        wdata = 0;
-        
-        // Reset sequence
-        #10 rst_n = 0;  
-        #20 rst_n = 1;  
-
-        // Begin test after reset
-        #13 wr_rq = 1;
-        rd_rq = 1;
-
-        fork
-            // Write operation
-            repeat (150) begin
-                @(posedge w_clk);
-                if (!full) begin
-                    wdata = $random() % (2**WIDTH); // Generate random data           
-                    fifo[wptr] = wdata;     
-                    wptr = (wptr + 1) % DEPTH; 
-                end
-                #10; 
-            end
-
-            // Read operation
-            forever begin
-                @(posedge r_clk);
-                if (!empty && rd_rq) begin               
-                    rptr = (rptr + 1) % DEPTH; 
-                end
-            end
-        join        
-    end
-
-    initial begin
-        
-        $dumpfile("fifo.vcd");
-        $dumpvars;
-    end
-
-
+      .ui_in  (ui_in),    // Dedicated inputs
+      .uo_out (uo_out),   // Dedicated outputs
+      .uio_in (uio_in),   // IOs: Input path
+      .uio_out(uio_out),  // IOs: Output path
+      .uio_oe (uio_oe),   // IOs: Enable path (active high: 0=input, 1=output)
+      .ena    (ena),      // enable - goes high when design is selected
+      .clk    (clk),      // clock
+      .rst_n  (rst_n)     // not reset
+  );
 
 endmodule
