@@ -32,14 +32,14 @@ pinout:
   ui[7]: "din[3]"
 
   # Outputs
-  uo[0]: "1'b0"
-  uo[1]: "1'b0"
-  uo[2]: "dout[3]"
-  uo[3]: "dout[2]"
-  uo[4]: "dout[1]"
-  uo[5]: "dout[0]"
-  uo[6]: "empty"
-  uo[7]: "full"
+  uo[0]: "full"
+  uo[1]: "empty""
+  uo[2]: "dout[0]"
+  uo[3]: "dout[1]"
+  uo[4]: "dout[2]"
+  uo[5]: "dout[3]"
+  uo[6]: ""
+  uo[7]: ""
 
   # Bidirectional pins
   uio[0]: ""
