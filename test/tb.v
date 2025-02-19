@@ -1,6 +1,6 @@
 `timescale 1ns / 1ps
 
-module tb_tt_im_monishvr_fifo();
+module tb();
 
     parameter WIDTH = 4, DEPTH = 3;
 
