@@ -24,7 +24,10 @@
   - Class: III Year B.E. ECE
   - Department of ECE, CEG
   - Email: tt@gmail.com
-
+- Gale Evano
+  - Class: I Year B.E. ECE
+  - Department of ECE, CEG
+  - Email: tt@gmail.com
 
 ### Alumni Mentors
 
