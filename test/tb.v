@@ -1,25 +1,23 @@
 `timescale 1ns/1ps
 
-module tb_fifo;
+module tb_tt_um_monishvr_fifo;
 
     // Testbench signals
     reg [7:0] ui_in;
-    wire [7:0] uo_out;
+    wire [7:0] out;
     reg [7:0] uio_in;
     wire [7:0] uio_out;
     wire [7:0] uio_oe;
     reg clk, rst_n;
     reg ena;
-    reg [3:0] data;
-    wire full, empty;
     
     // Instantiate the FIFO module
     tt_um_monishvr_fifo uut (
         .ui_in(ui_in),
-        .uo_out({data, empty, full}),
+        .uo_out(out),
         .uio_in(uio_in),
-        .uio_out(),
-        .uio_oe(),
+        .uio_out(uio_out),
+        .uio_oe(uio_oe),
         .ena(ena),
         .clk(clk),
         .rst_n(rst_n)
@@ -61,9 +59,9 @@ module tb_fifo;
     end
     
     // Monitor output
-    // initial begin
-    //     $monitor("Time=%0t, Write=%b, Read=%b, Data In=%b, Data Out=%b, Full=%b, Empty=%b", 
-    //              $time, ui_in[2], ui_in[3], ui_in[7:4], uo_out[5:2], uo_out[0], uo_out[1]);
-    // end
+    initial begin
+        $monitor("Time=%0t, Write=%b, Read=%b, Data In=%b, Data Out=%b, Full=%b, Empty=%b", 
+                 $time, ui_in[2], ui_in[3], ui_in[7:4], uo_out[5:2], uo_out[0], uo_out[1]);
+    end
 
 endmodule
