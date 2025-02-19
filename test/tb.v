@@ -22,7 +22,7 @@ module tb();
     wire r_clk;
 
     // Instantiate the FIFO module with correct port mapping
-    tt_um_reemashivva_fifo fifo_inst (
+    tt_um_monishvr_fifo fifo_inst (
         .clk(clk),
         .rst_n(rst_n),
         .ui_in({4'b0000, wdata}),  // Assign write data to upper bits of ui_in
