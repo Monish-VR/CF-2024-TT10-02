@@ -23,18 +23,42 @@ async def test_project(dut):
     await ClockCycles(dut.clk, 10)
     dut.rst_n.value = 1
 
-    dut._log.info("Test project behavior")
+    dut._log.info("Testing FIFO write and read operations")
 
-    # # Set the input values you want to test
-    # dut.ui_in.value = 20
-    # dut.uio_in.value = 30
+    # Write data into FIFO
+    for i in range(8):
+        dut.ui_in.value = (i << 4) | 0b00000100  # Data + write enable
+        await ClockCycles(dut.clk, 1)
+        dut.ui_in.value = 0  # Deassert write
+        await ClockCycles(dut.clk, 1)
 
-    # # Wait for one clock cycle to see the output values
-    # await ClockCycles(dut.clk, 1)
+    # Check full condition
+    assert dut.uo_out.value & 0b00000001, "FIFO should be full after writing 8 values"
+    dut._log.info("FIFO is full")
 
-    # # The following assersion is just an example of how to check the output values.
-    # # Change it to match the actual expected output of your module:
-    # assert dut.uo_out.value == 50
+    # Read data from FIFO
+    for i in range(8):
+        dut.ui_in.value = 0b00001000  # Read enable
+        await ClockCycles(dut.clk, 1)
+        dut.ui_in.value = 0  # Deassert read
+        await ClockCycles(dut.clk, 1)
+    
+    # Check empty condition
+    assert dut.uo_out.value & 0b00000010, "FIFO should be empty after reading all values"
+    dut._log.info("FIFO is empty after all reads")
 
-    # Keep testing the module by changing the input values, waiting for
-    # one or more clock cycles, and asserting the expected output values.
+    # Additional Read-Write mixed operations
+    dut._log.info("Testing alternating write and read operations")
+    for i in range(4):
+        # Write operation
+        dut.ui_in.value = (i << 4) | 0b00000100  # Data + write enable
+        await ClockCycles(dut.clk, 1)
+        dut.ui_in.value = 0  # Deassert write
+        await ClockCycles(dut.clk, 1)
+
+        # Read operation
+        dut.ui_in.value = 0b00001000  # Read enable
+        await ClockCycles(dut.clk, 1)
+        dut.ui_in.value = 0  # Deassert read
+        await ClockCycles(dut.clk, 1)
+    dut._log.info("Completed alternating write and read operations")
