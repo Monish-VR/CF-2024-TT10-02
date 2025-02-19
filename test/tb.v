@@ -4,7 +4,7 @@ module tb;
 
     // Testbench signals
     reg [7:0] ui_in;
-   wire [7:0] uo_out;
+    wire [7:0] out;
     reg [7:0] uio_in;
     wire [7:0] uio_out;
     wire [7:0] uio_oe;
@@ -14,10 +14,10 @@ module tb;
     // Instantiate the FIFO module
     tt_um_monishvr_fifo uut (
         .ui_in(ui_in),
-       .uo_out(uo_out),
-       .uio_in(uio_in),
-        .uio_out(),
-        .uio_oe(),
+        .uo_out(out),
+        .uio_in(uio_in),
+        .uio_out(uio_out),
+        .uio_oe(uio_oe),
         .ena(ena),
         .clk(clk),
         .rst_n(rst_n)
@@ -39,23 +39,23 @@ module tb;
         #10 rst_n = 0;
         
         // Write data to FIFO
-        // ui_in[2] = 1;  // Write enable
-        // ui_in[3] = 0;  // Read disable
-        // ui_in[7:4] = 4'b1010; // Data to be written
-        // #10 ui_in[2] = 0; // Disable write
+        ui_in[2] = 1;  // Write enable
+        ui_in[3] = 0;  // Read disable
+        ui_in[7:4] = 4'b1010; // Data to be written
+        #10 ui_in[2] = 0; // Disable write
         
-        // // Read data from FIFO
-        // #20 ui_in[2] = 0;  // Write disable
-        // ui_in[3] = 1;  // Read enable
-        // #10 ui_in[3] = 0; // Disable read
+        // Read data from FIFO
+        #20 ui_in[2] = 0;  // Write disable
+        ui_in[3] = 1;  // Read enable
+        #10 ui_in[3] = 0; // Disable read
         
-        // // Additional test cases
-        // #20 ui_in[2] = 1; ui_in[7:4] = 4'b1100; #10 ui_in[2] = 0; // Write another data
-        // #20 ui_in[3] = 1; #10 ui_in[3] = 0; // Read again
+        // Additional test cases
+        #20 ui_in[2] = 1; ui_in[7:4] = 4'b1100; #10 ui_in[2] = 0; // Write another data
+        #20 ui_in[3] = 1; #10 ui_in[3] = 0; // Read again
         
-        // // Finish simulation
-        // #50;
-        // $stop;
+        // Finish simulation
+        #50;
+        $stop;
     end
     
     // Monitor output
@@ -63,5 +63,10 @@ module tb;
 //        $monitor("Time=%0t, Write=%b, Read=%b, Data In=%b, Data Out=%b, Full=%b, Empty=%b", 
 //                 $time, ui_in[2], ui_in[3], ui_in[7:4], uo_out[5:2], uo_out[0], uo_out[1]);
 //    end
+        initial begin
+        
+            $dumpfile("syncFifo.vcd");
+        $dumpvars;
+    end
 
 endmodule
