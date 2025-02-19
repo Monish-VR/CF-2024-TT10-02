@@ -1,6 +1,6 @@
 `timescale 1ns/1ps
 
-module tb;
+module tb_fifo;
 
     // Testbench signals
     reg [7:0] ui_in;
@@ -16,8 +16,8 @@ module tb;
         .ui_in(ui_in),
         .uo_out(uo_out),
         .uio_in(uio_in),
-        .uio_out(uio_out),
-        .uio_oe(uio_oe),
+        .uio_out(),
+        .uio_oe(),
         .ena(ena),
         .clk(clk),
         .rst_n(rst_n)
