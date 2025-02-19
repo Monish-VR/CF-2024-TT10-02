@@ -34,7 +34,7 @@ async def test_project(dut):
         await ClockCycles(dut.clk, 1)
 
     # Check full condition
-  assert dut.uo_out.value & 0b00000001, "FIFO should be full after writing 8 values"
+    assert dut.uo_out.value & 0b00000001, "FIFO should be full after writing 8 values"
 
     dut._log.info("FIFO is full")
 
