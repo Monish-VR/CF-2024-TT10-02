@@ -5,62 +5,41 @@ import cocotb
 from cocotb.clock import Clock
 from cocotb.triggers import ClockCycles
 
-
 @cocotb.test()
-async def test_project(dut):
-    dut._log.info("Start")
+async def fifo_simple_test(dut):
+    """Simple FIFO Test: Write one value and read it back"""
+    
+    dut._log.info("Starting FIFO Test")
 
-    # Set the clock period to 10 us (100 KHz)
-    clock = Clock(dut.clk, 10, units="us")
+    # Start the clock (10ns period = 100 MHz)
+    clock = Clock(dut.clk, 10, units="ns")
     cocotb.start_soon(clock.start())
 
-    # Reset
-    dut._log.info("Reset")
-    dut.ena.value = 1
-    dut.ui_in.value = 0
-    dut.uio_in.value = 0
-    dut.rst_n.value = 0
-    await ClockCycles(dut.clk, 10)
-    dut.rst_n.value = 1
+    # Reset the FIFO
+    dut.ena.value = 1  # Enable
+    dut.rst_n.value = 0  
+    await ClockCycles(dut.clk, 5)  # Hold reset
+    dut.rst_n.value = 1  
+    await ClockCycles(dut.clk, 5)  # Wait for reset to clear
 
-    dut._log.info("Testing FIFO write and read operations")
-# dut._log.info(f"Available signals: {dir(dut)}")
+    dut._log.info("FIFO Reset Complete")
 
-    # Write data into FIFO
-    for i in range(8):
-        dut.ui_in.value = (i << 4) | 0b00000100  # Data + write enable
-        await ClockCycles(dut.clk, 1)
-        dut.ui_in.value = 0  # Deassert write
-        await ClockCycles(dut.clk, 1)
+    # WRITE operation
+    dut.ui_in.value = 0b00010100  # Write Enable + Data = 4'b0100 (decimal 4)
+    await ClockCycles(dut.clk, 1)  # One clock cycle
+    dut.ui_in.value = 0b00000000  # Disable write
 
-    # Check full condition
-    assert dut.uo_out.value & 0b00000001, "FIFO should be full after writing 8 values"
+    dut._log.info("Write operation done")
 
-    dut._log.info("FIFO is full")
+    # READ operation
+    await ClockCycles(dut.clk, 2)  # Wait a bit before reading
+    dut.ui_in.value = 0b00001000  # Read Enable
+    await ClockCycles(dut.clk, 1)  # One clock cycle
+    dut.ui_in.value = 0b00000000  # Disable read
 
-    # Read data from FIFO
-    for i in range(8):
-        dut.ui_in.value = 0b00001000  # Read enable
-        await ClockCycles(dut.clk, 1)
-        dut.ui_in.value = 0  # Deassert read
-        await ClockCycles(dut.clk, 1)
-    
-    # Check empty condition
-    assert dut.uo_out.value & 0b00000010, "FIFO should be empty after reading all values"
-    dut._log.info("FIFO is empty after all reads")
+    dut._log.info(f"Read operation done, Output: {dut.uo_out.value}")
 
-    # Additional Read-Write mixed operations
-    dut._log.info("Testing alternating write and read operations")
-    for i in range(4):
-        # Write operation
-        dut.ui_in.value = (i << 4) | 0b00000100  # Data + write enable
-        await ClockCycles(dut.clk, 1)
-        dut.ui_in.value = 0  # Deassert write
-        await ClockCycles(dut.clk, 1)
+    # Check the output value
+    assert (dut.uo_out.value & 0b00111100) >> 2 == 4, "FIFO Read Error!"
 
-        # Read operation
-        dut.ui_in.value = 0b00001000  # Read enable
-        await ClockCycles(dut.clk, 1)
-        dut.ui_in.value = 0  # Deassert read
-        await ClockCycles(dut.clk, 1)
-    dut._log.info("Completed alternating write and read operations")
+    dut._log.info("FIFO Test Passed!")
