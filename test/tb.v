@@ -4,7 +4,7 @@ module tb;
 
     // Testbench signals
     reg [7:0] ui_in;
-    wire [7:0] out;
+    wire [7:0] uo_out;
     reg [7:0] uio_in;
     wire [7:0] uio_out;
     wire [7:0] uio_oe;
@@ -14,7 +14,7 @@ module tb;
     // Instantiate the FIFO module
     tt_um_monishvr_fifo uut (
         .ui_in(ui_in),
-        .uo_out(out),
+        .uo_out(uo_out),
         .uio_in(uio_in),
         .uio_out(uio_out),
         .uio_oe(uio_oe),
