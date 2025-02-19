@@ -10,11 +10,13 @@ module tb_fifo;
     wire [7:0] uio_oe;
     reg clk, rst_n;
     reg ena;
+    reg [3:0] data;
+    wire full, empty;
     
     // Instantiate the FIFO module
     tt_um_monishvr_fifo uut (
         .ui_in(ui_in),
-        .uo_out(uo_out),
+        .uo_out({data, empty, full}),
         .uio_in(uio_in),
         .uio_out(),
         .uio_oe(),
