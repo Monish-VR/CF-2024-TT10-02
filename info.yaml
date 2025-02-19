@@ -33,7 +33,7 @@ pinout:
 
   # Outputs
   uo[0]: "full"
-  uo[1]: "empty""
+  uo[1]: "empty"
   uo[2]: "dout[0]"
   uo[3]: "dout[1]"
   uo[4]: "dout[2]"
