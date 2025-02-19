@@ -35,7 +35,7 @@ COMPILE_ARGS 		+= -I$(SRC_DIR)
 
 # Include the testbench sources:
 VERILOG_SOURCES += $(PWD)/tb.v
-TOPLEVEL = tb_tt_um_monishvr_fifo
+TOPLEVEL = tb
 
 # MODULE is the basename of the Python test file
 MODULE = test
