@@ -39,7 +39,8 @@ end
 // Assign unused IOs to prevent warnings
 assign uio_out = 0;
 assign uio_oe  = 0;
-    assign uo_out = {2'b00, dout[3:0], empty, full};
+assign uo_out[7:6] = 0;
+assign uo_out[5:0] = {dout[3:0], empty, full};
 
 wire _unused = &{ena, ui_in[0], ui_in[1], uio_in[7:0]};
 
